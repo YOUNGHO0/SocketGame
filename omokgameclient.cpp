@@ -113,7 +113,8 @@ void OmokGameClient::mousePressEvent(QMouseEvent *event) {
 
     // 돌을 놓음
     placeStone(stonePos, x, y);
-
+    // 서버에 돌 놓은 위치 전송
+    sendMoveToServer(x, y);
     // 승리 조건 확인
     if (checkWinCondition(x, y)) {
         QMessageBox::information(this, "Victory", "You win!");
@@ -207,5 +208,16 @@ bool OmokGameClient::checkWinCondition(int x, int y) {
 
     return false;
 }
+void OmokGameClient::sendMoveToServer(int x, int y) {
+    // 서버로 돌 놓은 위치를 전송하는 코드
+    if (socket && socket->state() == QAbstractSocket::ConnectedState) {
+        QByteArray data;
+        QDataStream stream(&data, QIODevice::WriteOnly);
+        stream << x << y;  // x, y 좌표를 전송
 
+        socket->write(data);  // 서버에 데이터 전송
+    } else {
+        QMessageBox::warning(this, "Connection Error", "Not connected to server.");
+    }
+}
 

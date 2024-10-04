@@ -40,6 +40,7 @@ private:
     bool isBlackTurn;
     bool playerIsBlack;
     QTcpSocket *socket;  // 서버와의 소켓 연결
+    void sendMoveToServer(int x, int y);
 };
 
 #endif // OMOKGAMECLIENT_H
